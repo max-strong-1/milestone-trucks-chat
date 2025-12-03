@@ -1,65 +1,54 @@
-import Image from "next/image";
+import RetellWidget from '@/components/RetellWidget';
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+        <main className="min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <div className="relative bg-slate-900 text-white">
+                <div className="absolute inset-0 overflow-hidden">
+                    <img
+                        src="https://staging12.milestonetrucks.com/wp-content/uploads/2024/05/dump-truck-service-bg.jpg"
+                        alt="Background"
+                        className="w-full h-full object-cover opacity-30"
+                    />
+                </div>
+                <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+                    <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                        Milestone Trucks
+                    </h1>
+                    <p className="mt-6 text-xl text-gray-300 max-w-3xl">
+                        Reliable delivery of Gravel, Topsoil, Mulch, and Sand. Expert Dump Truck Services for Homeowners and Contractors.
+                    </p>
+                    <div className="mt-10 flex gap-4">
+                        <a href="#" className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold py-3 px-8 rounded-md transition-colors">
+                            Order Now
+                        </a>
+                        <a href="#" className="bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-8 rounded-md backdrop-blur-sm transition-colors">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {/* Services Section */}
+            <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Services</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {[
+                        { title: 'Gravel & Stone', desc: 'High-quality gravel and decorative stone for your landscaping needs.' },
+                        { title: 'Topsoil & Mulch', desc: 'Premium topsoil and mulch to keep your garden thriving.' },
+                        { title: 'Dump Truck Services', desc: 'Professional hauling and delivery services for any project size.' },
+                    ].map((service, index) => (
+                        <div key={index} className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h3>
+                            <p className="text-gray-600">{service.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Retell Widget */}
+            <RetellWidget />
+        </main>
+    );
 }
