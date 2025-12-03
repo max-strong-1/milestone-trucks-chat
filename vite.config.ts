@@ -21,4 +21,8 @@ export default defineConfig({
         // Minify for production
         minify: 'esbuild',
     },
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    },
 });
+
