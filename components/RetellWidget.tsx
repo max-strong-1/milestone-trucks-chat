@@ -76,11 +76,18 @@ const RetellWidget: React.FC<RetellWidgetProps> = () => {
     }, [isCalling, currentCallId]);
 
     const startCall = async () => {
-        if (!retellWebClient) return;
+        console.log('Start Call clicked');
+        if (!retellWebClient) {
+            console.error('Retell client not initialized');
+            return;
+        }
 
         try {
+            console.log('Fetching access token...');
             // 1. Get Access Token from your backend
-            const response = await fetch('/api/retell/register-call', {
+            // Use absolute URL for the widget since it runs on a different domain
+            const apiUrl = 'https://milestone-trucks-chat.vercel.app/api/retell/register-call';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,21 +96,27 @@ const RetellWidget: React.FC<RetellWidgetProps> = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to get access token');
+                const errorText = await response.text();
+                console.error('Failed to get access token:', response.status, errorText);
+                throw new Error(`Failed to get access token: ${response.status}`);
             }
 
             const data = await response.json();
+            console.log('Access token received:', data);
 
             if (data.call_id) {
                 setCurrentCallId(data.call_id);
             }
 
             // 2. Start the call
+            console.log('Starting call with Retell SDK...');
             await retellWebClient.startCall({
                 accessToken: data.access_token,
             });
+            console.log('Call started successfully');
         } catch (error) {
             console.error('Failed to start call:', error);
+            alert('Failed to start call. Check console for details.');
         }
     };
 
