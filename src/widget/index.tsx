@@ -24,5 +24,9 @@ function mount() {
 
 // Auto-mount when script loads
 if (typeof window !== 'undefined') {
-    mount();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount);
+    } else {
+        mount();
+    }
 }
