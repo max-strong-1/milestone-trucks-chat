@@ -44,7 +44,8 @@ const RetellWidget: React.FC<RetellWidgetProps> = () => {
 
         const interval = setInterval(async () => {
             try {
-                const response = await fetch(`/api/retell/commands?call_id=${currentCallId}`);
+                const apiUrl = 'https://milestone-trucks-chat.vercel.app/api/retell/commands';
+                const response = await fetch(`${apiUrl}?call_id=${currentCallId}`);
                 const data = await response.json();
 
                 if (data.commands && data.commands.length > 0) {
