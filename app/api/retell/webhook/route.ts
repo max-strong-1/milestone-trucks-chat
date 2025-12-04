@@ -1,100 +1,130 @@
 import { NextResponse } from 'next/server';
-import { addCommand } from '../../../../lib/commandStore';
+import { addCommand } from '../../../../../../lib/commandStore';
 
 export async function POST(request: Request) {
-    try {
-        const body = await request.json();
-        const { event, call_id } = body;
+  try {
+    const body = await request.json();
+    const { event, call_id } = body;
 
-        console.log('Webhook received:', event, call_id);
+    console.log('Webhook received:', event, call_id);
 
-        if (event === 'tool_call') {
-            const { tool_call_id, name, arguments: args } = body.tool_call;
-            console.log('Tool call:', name, args);
+    if (event === 'tool_call') {
+      const { tool_call_id, name, arguments: args } = body.tool_call;
+      console.log('Tool call:', name, args);
 
-            let result = {};
+      let result = {};
 
-            switch (name) {
-                    case 'check_service_area': {
-        const { zipCode } = args;
-        const { checkServiceArea } = await import('@/lib/check-service-area');
-        const isServiced = checkServiceArea(zipCode);
-        
-        result = {
-          success: true,
-          isServiced,
-          message: isServiced 
-            ? `ZIP ${zipCode} is in our service area` 
-            : `ZIP ${zipCode} is outside our current service area. We serve Ohio, Indiana, Pennsylvania, West Virginia, Kentucky, and Michigan.`
-        };
-        break;
-      }
-```
-
-
-     
-              case 'get_materials_by_zip':
-        // Mock logic for materials
-        const { zip } = args;
-        if (zip === '43537' || zip === '43528' || zip === '43604') {
+      switch (name) {
+        case 'check_service_area': {
+          const { zipCode } = args;
+          const { checkServiceArea } = await import('@/lib/check-service-area');
+          const isServiced = checkServiceArea(zipCode);
+          
           result = {
-            available: true,
-            materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
-           
+            success: true,
+            isServiced,
+            message: isServiced 
+              ? `ZIP ${zipCode} is in our service area` 
+              : `ZIP ${zipCode} is outside our current service area. We serve Ohio, Indiana, Pennsylvania, West Virginia, Kentucky, and Michigan.`
           };
-        {
-                        result = {
-                            available: false,
-                            message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
-                        };
-                    }
-                    break;
-
-                case 'calculate_quantity':
-                    const { length, width, depth } = args;
-                    // simple cubic yards calculation: (L * W * D/12) / 27
-                    const cubicFeet = length * width * (depth / 12);
-                    const cubicYards = Math.ceil(cubicFeet / 27);
-                    result = {
-                        quantity: cubicYards,
-                        unit: 'cubic yards',
-                        message: `For an area of ${length}x${width} feet with a depth of ${depth} inches, you will need approximately ${cubicYards} cubic yards of material.`
-                    };
-                    break;
-
-                case 'navigate_to':
-                    addCommand(call_id, {
-                        type: 'NAVIGATE',
-                        payload: args.page_slug,
-                        timestamp: Date.now()
-                    });
-                    result = { success: true, message: `Navigating user to ${args.page_slug}` };
-                    break;
-
-                case 'prefill_checkout_form':
-                    addCommand(call_id, {
-                        type: 'PREFILL_FORM',
-                        payload: args,
-                        timestamp: Date.now()
-                    });
-                    result = { success: true, message: 'Checkout form pre-filled with customer details.' };
-                    break;
-
-                default:
-                    result = { error: 'Unknown tool' };
-            }
-
-            // Return the result to Retell
-            return NextResponse.json({
-                type: 'tool_call_result',
-                tool_call_id: tool_call_id,
-                content: JSON.stringify(result)
-            });
+          break;
         }
 
-        return NextResponse.json({ received: true });
-    } catch (error) {
-        console.error('Webhook error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        case 'get_materials_by_zip': {
+          const { zip } = args;
+          if (zip === '43537' || zip === '43528' || zip === '43604') {
+            result = {
+              available: true,
+              materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
+              message: `Yes, we deliver to ${zip}. We have 57 Gravel, Topsoil, Mulch, and Sand available.`
+            };
+          } else {
+            result = {
+              available: false,
+              message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
+            };
+          }
+          break;
+        }
+
+        case 'get_material_details': {
+          const { material_id } = args;
+          result = {
+            name: material_id,
+            price_per_yard: 45,
+            description: 'High quality material for your project'
+          };
+          break;
+        }
+
+        case 'calculate_quantity': {
+          const { length, width, depth } = args;
+          const cubicFeet = length * width * (depth / 12) / 27;
+          result = {
+            cubic_yards: Math.ceil(cubicFeet),
+            message: `You'll need approximately ${Math.ceil(cubicFeet)} cubic yards`
+          };
+          break;
+        }
+
+        case 'create_or_update_cart': {
+          const { items } = args;
+          addCommand(call_id, 'create_or_update_cart', { items });
+          result = {
+            success: true,
+            message: 'Cart updated successfully'
+          };
+          break;
+        }
+
+        case 'navigate_to': {
+          const { page } = args;
+          addCommand(call_id, 'navigate_to', { page });
+          result = {
+            success: true,
+            message: `Navigating to ${page}`
+          };
+          break;
+        }
+
+        case 'prefill_checkout_form': {
+          const formData = args;
+          addCommand(call_id, 'prefill_checkout_form', formData);
+          result = {
+            success: true,
+            message: 'Form prefilled successfully'
+          };
+          break;
+        }
+
+        case 'update_session_state': {
+          const { key, value } = args;
+          addCommand(call_id, 'update_session_state', { key, value });
+          result = {
+            success: true,
+            message: 'Session state updated'
+          };
+          break;
+        }
+
+        default:
+          result = {
+            error: `Unknown tool: ${name}`
+          };
+      }
+
+      return NextResponse.json({
+        response_type: 'response',
+        response: result
+      });
     }
+
+    return NextResponse.json({ status: 'ok' });
+  } catch (error) {
+    console.error('Webhook error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
