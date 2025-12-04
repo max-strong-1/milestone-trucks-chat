@@ -15,6 +15,27 @@ export async function POST(request: Request) {
             let result = {};
 
             switch (name) {
+                    case 'check_service_area': {
+        const { zipCode } = args;
+        const { checkServiceArea } = await import('@/lib/check-service-area');
+        const isServiced = checkServiceArea(zipCode);
+        
+        result = {
+          success: true,
+          isServiced,
+          message: isServiced 
+            ? `ZIP ${zipCode} is in our service area` 
+            : `ZIP ${zipCode} is outside our current service area. We serve Ohio, Indiana, Pennsylvania, West Virginia, Kentucky, and Michigan.`
+        };
+        break;
+      }
+```
+
+So it should look like:
+```
+Line 17: switch (name) {
+Line 18: [NEW CODE BLOCK HERE]
+Line 34: case 'get_materials_by_zip':
                 case 'get_materials_by_zip':
                     // Mock logic for materials
                     const { zip } = args;
