@@ -68,7 +68,11 @@ export async function POST(request: Request) {
 
         case 'create_or_update_cart': {
           const { items } = args;
-          addCommand(call_id, 'create_or_update_cart', { items });
+          addCommand(call_id, {
+            type: 'create_or_update_cart',
+            payload: { items },
+            timestamp: Date.now()
+          });
           result = {
             success: true,
             message: 'Cart updated successfully'
@@ -78,7 +82,11 @@ export async function POST(request: Request) {
 
         case 'navigate_to': {
           const { page } = args;
-          addCommand(call_id, 'navigate_to', { page });
+          addCommand(call_id, {
+            type: 'navigate_to',
+            payload: { page },
+            timestamp: Date.now()
+          });
           result = {
             success: true,
             message: `Navigating to ${page}`
@@ -88,7 +96,11 @@ export async function POST(request: Request) {
 
         case 'prefill_checkout_form': {
           const formData = args;
-          addCommand(call_id, 'prefill_checkout_form', formData);
+          addCommand(call_id, {
+            type: 'prefill_checkout_form',
+            payload: formData,
+            timestamp: Date.now()
+          });
           result = {
             success: true,
             message: 'Form prefilled successfully'
@@ -98,7 +110,11 @@ export async function POST(request: Request) {
 
         case 'update_session_state': {
           const { key, value } = args;
-          addCommand(call_id, 'update_session_state', { key, value });
+          addCommand(call_id, {
+            type: 'update_session_state',
+            payload: { key, value },
+            timestamp: Date.now()
+          });
           result = {
             success: true,
             message: 'Session state updated'
