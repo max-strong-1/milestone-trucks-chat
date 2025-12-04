@@ -1,7 +1,7 @@
 // Simple in-memory store for demo purposes
 // In production, use Redis or a database
 type Command = {
-    type: 'NAVIGATE' | 'PREFILL_FORM' | 'UPDATE_CART';
+   type: 'NAVIGATE' | 'PREFILL_FORM' | 'UPDATE_CART' | 'UPDATE_SESSION';
     payload: any;
     timestamp: number;
 };
