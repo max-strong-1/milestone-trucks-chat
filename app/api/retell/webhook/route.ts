@@ -42,13 +42,7 @@ export async function POST(request: Request) {
             materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
            
           };
-        } else {
-          result = {
-            available: false,
-            message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
-          };
-        }
-        break;      } else {
+        {
                         result = {
                             available: false,
                             message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
