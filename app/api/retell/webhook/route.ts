@@ -40,7 +40,7 @@ export async function POST(request: Request) {
           result = {
             available: true,
             materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
-            message: `Yes, we deliver to ${zip}. We have 57 Gravel, Topsoil, Mulch, and Sand available.`
+           
           };
         } else {
           result = {
