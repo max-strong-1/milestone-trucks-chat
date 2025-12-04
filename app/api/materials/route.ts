@@ -7,95 +7,147 @@ import { NextRequest, NextResponse } from 'next/server';
  * Used by ElevenLabs tool: get_materials_by_zip
  */
 
-// Mock data - replace with real WordPress/WooCommerce query later
+// Material database - all materials available to all 7,802 serviced ZIP codes
 const MATERIALS_DATABASE = [
   {
     id: 1,
-    name: "#57 Stone",
-    type: "gravel",
-    description: "Clean crushed stone, ideal for driveways and drainage",
-    price_per_cubic_yard: 45,
+    name: "#304 Limestone Base",
+    type: "limestone",
+    description: "Crushed limestone base material, excellent for road base and driveways",
+    price_per_cubic_yard: 42,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405", "32407", "32408", "32409"],
     delivery_fee: 75,
     product_id: 101,
   },
   {
     id: 2,
-    name: "#8 Stone",
+    name: "#57 Limestone / Gravel",
     type: "gravel",
-    description: "Smaller crushed stone, great for pathways and landscaping",
-    price_per_cubic_yard: 48,
+    description: "Clean crushed stone, ideal for driveways, drainage, and concrete aggregate",
+    price_per_cubic_yard: 45,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405", "32407", "32408", "32409"],
     delivery_fee: 75,
     product_id: 102,
   },
   {
     id: 3,
-    name: "Pea Gravel",
-    type: "gravel",
-    description: "Smooth rounded stone, perfect for decorative landscaping",
-    price_per_cubic_yard: 52,
+    name: "#2 Stone (and #1)",
+    type: "stone",
+    description: "Large angular stone for drainage and erosion control",
+    price_per_cubic_yard: 50,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405"],
     delivery_fee: 75,
     product_id: 103,
   },
   {
     id: 4,
-    name: "Mason Sand",
-    type: "sand",
-    description: "Fine sand for masonry work, paver bases, and sandboxes",
-    price_per_cubic_yard: 35,
+    name: "#8 Gravel",
+    type: "gravel",
+    description: "Smaller crushed stone, great for pathways, landscaping, and drainage",
+    price_per_cubic_yard: 48,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405", "32407", "32408", "32409"],
     delivery_fee: 75,
     product_id: 104,
   },
   {
     id: 5,
-    name: "Fill Sand",
-    type: "sand",
-    description: "Coarse sand for filling and leveling projects",
-    price_per_cubic_yard: 32,
-    minimum_order_cubic_yards: 2,
-    available_zips: ["32401", "32402", "32403", "32404", "32405", "32407", "32408", "32409"],
+    name: "River Gravel",
+    type: "gravel",
+    description: "Smooth rounded river rock, perfect for decorative landscaping and drainage",
+    price_per_cubic_yard: 55,
+    minimum_order_cubic_yards: 1,
     delivery_fee: 75,
     product_id: 105,
   },
   {
     id: 6,
-    name: "Brown Mulch",
-    type: "mulch",
-    description: "Natural brown mulch for garden beds and landscaping",
-    price_per_cubic_yard: 28,
+    name: "Concrete Sand",
+    type: "sand",
+    description: "Washed sand for concrete mixing, masonry work, and paver bases",
+    price_per_cubic_yard: 38,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405"],
     delivery_fee: 75,
     product_id: 106,
   },
   {
     id: 7,
-    name: "Black Mulch",
+    name: "Mulch (Black)",
     type: "mulch",
-    description: "Dyed black mulch for a bold landscaping look",
+    description: "Dyed black mulch for a bold, modern landscaping look",
     price_per_cubic_yard: 30,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403", "32404", "32405"],
     delivery_fee: 75,
     product_id: 107,
   },
   {
     id: 8,
-    name: "Red Mulch",
-    type: "mulch",
-    description: "Dyed red mulch for vibrant garden beds",
-    price_per_cubic_yard: 30,
+    name: "Topsoil (Screened)",
+    type: "soil",
+    description: "Premium screened topsoil for gardens, lawns, and landscaping projects",
+    price_per_cubic_yard: 35,
     minimum_order_cubic_yards: 1,
-    available_zips: ["32401", "32402", "32403"],
     delivery_fee: 75,
     product_id: 108,
+  },
+  {
+    id: 9,
+    name: "Pea Gravel",
+    type: "gravel",
+    description: "Small smooth rounded stone, perfect for decorative landscaping and pathways",
+    price_per_cubic_yard: 52,
+    minimum_order_cubic_yards: 1,
+    delivery_fee: 75,
+    product_id: 109,
+  },
+  {
+    id: 10,
+    name: "Fill Dirt",
+    type: "soil",
+    description: "Unscreened fill dirt for grading, filling, and leveling large areas",
+    price_per_cubic_yard: 25,
+    minimum_order_cubic_yards: 2,
+    delivery_fee: 75,
+    product_id: 110,
+  },
+  {
+    id: 11,
+    name: "#411 Limestone",
+    type: "limestone",
+    description: "Fine limestone screenings, ideal for walkways, patios, and as a compactable base",
+    price_per_cubic_yard: 40,
+    minimum_order_cubic_yards: 1,
+    delivery_fee: 75,
+    product_id: 111,
+  },
+  {
+    id: 12,
+    name: "Mulch (Brown)",
+    type: "mulch",
+    description: "Natural brown mulch for traditional garden beds and landscaping",
+    price_per_cubic_yard: 28,
+    minimum_order_cubic_yards: 1,
+    delivery_fee: 75,
+    product_id: 112,
+  },
+  {
+    id: 13,
+    name: "Mulch (Red)",
+    type: "mulch",
+    description: "Dyed red mulch for vibrant, eye-catching garden beds",
+    price_per_cubic_yard: 30,
+    minimum_order_cubic_yards: 1,
+    delivery_fee: 75,
+    product_id: 113,
+  },
+  {
+    id: 14,
+    name: "Mason Sand",
+    type: "sand",
+    description: "Fine washed sand for masonry work, mortar mixing, and sandboxes",
+    price_per_cubic_yard: 35,
+    minimum_order_cubic_yards: 1,
+    delivery_fee: 75,
+    product_id: 114,
   },
 ];
 
@@ -124,25 +176,26 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const availableMaterials = MATERIALS_DATABASE.filter(material => 
-      material.available_zips.includes(zip)
-    );
+    // Check if ZIP is in our service area
+    const { checkServiceArea } = await import('@/lib/check-service-area');
+    const isServiced = checkServiceArea(zip);
 
-    if (availableMaterials.length === 0) {
+    if (!isServiced) {
       return NextResponse.json({
-        success: true,
+        success: false,
         zip: zip,
-        message: "Sorry, we don't currently deliver to this ZIP code. We serve Panama City and surrounding areas (ZIP codes: 32401-32409).",
+        message: "Sorry, we don't currently deliver to this ZIP code. We serve Northwest Ohio and surrounding areas.",
         materials: [],
-        service_area: ["32401", "32402", "32403", "32404", "32405", "32407", "32408", "32409"]
+        service_area_info: "We deliver to 7,802 ZIP codes across our service region. Please contact us to confirm availability."
       });
     }
 
+    // All materials available to all serviced ZIPs
     return NextResponse.json({
       success: true,
       zip: zip,
-      message: `Found ${availableMaterials.length} materials available for delivery to ZIP ${zip}`,
-      materials: availableMaterials.map(m => ({
+      message: `All ${MATERIALS_DATABASE.length} materials available for delivery to ZIP ${zip}`,
+      materials: MATERIALS_DATABASE.map(m => ({
         id: m.id,
         name: m.name,
         type: m.type,
