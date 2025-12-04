@@ -31,12 +31,8 @@ export async function POST(request: Request) {
       }
 ```
 
-So it should look like:
-```
-Line 17: switch (name) {
-Line 18: [NEW CODE BLOCK HERE]
-Line 34: case 'get_materials_by_zip':
-                case 'get_materials_by_zip':
+
+                  case 'get_materials_by_zip':
                     // Mock logic for materials
                     const { zip } = args;
                     if (zip === '43537' || zip === '43528') {
