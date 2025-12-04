@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         case 'create_or_update_cart': {
           const { items } = args;
           addCommand(call_id, {
-            type: 'create_or_update_cart',
+            type: 'UPDATE_CART',
             payload: { items },
             timestamp: Date.now()
           });
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         case 'navigate_to': {
           const { page } = args;
           addCommand(call_id, {
-            type: 'navigate_to',
+            type: 'NAVIGATE',
             payload: { page },
             timestamp: Date.now()
           });
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
         case 'prefill_checkout_form': {
           const formData = args;
           addCommand(call_id, {
-            type: 'prefill_checkout_form',
+            type: 'PREFILL_FORM',
             payload: formData,
             timestamp: Date.now()
           });
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
         case 'update_session_state': {
           const { key, value } = args;
           addCommand(call_id, {
-            type: 'update_session_state',
+            type: 'UPDATE_SESSION',
             payload: { key, value },
             timestamp: Date.now()
           });
