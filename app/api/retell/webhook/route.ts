@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { addCommand } from '../../../../../../lib/commandStore';
-
+import { addCommand } from '@/lib/commandStore';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
