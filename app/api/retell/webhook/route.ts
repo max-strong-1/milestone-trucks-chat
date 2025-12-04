@@ -32,16 +32,23 @@ export async function POST(request: Request) {
 ```
 
 
-                  case 'get_materials_by_zip':
-                    // Mock logic for materials
-                    const { zip } = args;
-                    if (zip === '43537' || zip === '43528') {
-                        result = {
-                            available: true,
-                            materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
-                            message: `Yes, we deliver to ${zip}. We have 57 Gravel, Topsoil, Mulch, and Sand available.`
-                        };
-                    } else {
+     
+              case 'get_materials_by_zip':
+        // Mock logic for materials
+        const { zip } = args;
+        if (zip === '43537' || zip === '43528' || zip === '43604') {
+          result = {
+            available: true,
+            materials: ['57_gravel', 'topsoil', 'mulch', 'sand'],
+            message: `Yes, we deliver to ${zip}. We have 57 Gravel, Topsoil, Mulch, and Sand available.`
+          };
+        } else {
+          result = {
+            available: false,
+            message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
+          };
+        }
+        break;      } else {
                         result = {
                             available: false,
                             message: `I'm sorry, but ${zip} is outside our primary delivery zone. However, we might be able to work something out properly. Let me check our extended range.`
