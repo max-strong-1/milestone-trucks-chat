@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         // ElevenLabs direct tool call format
         if (toolName) {
             console.log('ElevenLabs Tool call:', toolName, toolArgs);
-            const result = handleToolCall(toolName, toolArgs, call_id);
+            const result = await handleToolCall(toolName, toolArgs, call_id);
             return NextResponse.json({ result });
         }
 
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
             const { tool_call_id, name, arguments: args } = tool_call;
             console.log('Retell Tool call:', name, args);
 
-            const result = handleToolCall(name, args, call_id);
+            const result = await handleToolCall(name, args, call_id);
 
             return NextResponse.json({
                 type: 'tool_call_result',
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 }
 
-function handleToolCall(name: string, args: any, callId?: string): any {
+async function handleToolCall(name: string, args: any, callId?: string): Promise<any> {
     switch (name) {
         case 'check_service_area': {
             const zipCode = args.zip_code || args.zipCode;
@@ -72,7 +72,7 @@ function handleToolCall(name: string, args: any, callId?: string): any {
                 };
             }
 
-            const materials = getAllMaterials();
+            const materials = await getAllMaterials();
 
             return {
                 available: true,
@@ -90,7 +90,7 @@ function handleToolCall(name: string, args: any, callId?: string): any {
 
         case 'get_material_details': {
             const { material_id } = args;
-            const material = getMaterialByProductId(Number(material_id));
+            const material = await getMaterialByProductId(Number(material_id));
 
             if (!material) {
                 return {

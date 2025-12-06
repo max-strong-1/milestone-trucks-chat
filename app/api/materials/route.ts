@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     // All materials available to all serviced ZIPs
-    const materials = getAllMaterials();
+    const materials = await getAllMaterials();
 
     return NextResponse.json({
       success: true,
