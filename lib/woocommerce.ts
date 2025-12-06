@@ -1,6 +1,6 @@
 import { Material } from './materials';
 
-const WOOCOMMERCE_URL = process.env.WOOCOMMERCE_URL || 'https://milestonetrucks.com';
+const WOOCOMMERCE_URL = process.env.WOOCOMMERCE_URL || 'https://staging12.milestonetrucks.com';
 const CONSUMER_KEY = process.env.WOOCOMMERCE_CONSUMER_KEY || 'ck_5cfc3a63730922d5db1d06cf2bc78db5a7fd4f79';
 const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET || 'cs_db6c8c2125d1ff1eb522afeb150cd066c1eae49f';
 
