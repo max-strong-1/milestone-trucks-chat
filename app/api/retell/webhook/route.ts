@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { addCommand } from '@/lib/commandStore';
-import SERVICED_ZIP_CODES from '@/lib/service-area-zips';
+import { SERVICED_ZIP_CODES } from '@/lib/service-area-zips';
 
 // Materials catalog (Product IDs 101-114)
 const MATERIALS = [
