@@ -1,33 +1,7 @@
 import { NextResponse } from 'next/server';
 import { addCommand } from '@/lib/commandStore';
-import { SERVICED_ZIP_CODES } from '@/lib/service-area-zips';
-
-// Materials catalog (Product IDs 101-114)
-const MATERIALS = [
-    { id: 101, name: '#57 Limestone', price: 42, unit: 'ton', minimum: 2 },
-    { id: 102, name: '#304 Limestone', price: 38, unit: 'cubic yard', minimum: 1 },
-    { id: 103, name: '#8 Limestone', price: 45, unit: 'ton', minimum: 2 },
-    { id: 104, name: 'Crusher Run', price: 35, unit: 'ton', minimum: 2 },
-    { id: 105, name: 'Premium Topsoil', price: 32, unit: 'cubic yard', minimum: 1 },
-    { id: 106, name: 'Fill Dirt', price: 18, unit: 'cubic yard', minimum: 3 },
-    { id: 107, name: 'Black Mulch', price: 38, unit: 'cubic yard', minimum: 2 },
-    { id: 108, name: 'Brown Mulch', price: 36, unit: 'cubic yard', minimum: 2 },
-    { id: 109, name: 'Red Mulch', price: 40, unit: 'cubic yard', minimum: 2 },
-    { id: 110, name: 'Playground Mulch', price: 42, unit: 'cubic yard', minimum: 2 },
-    { id: 111, name: 'River Rock', price: 65, unit: 'ton', minimum: 1 },
-    { id: 112, name: 'Pea Gravel', price: 48, unit: 'ton', minimum: 1 },
-    { id: 113, name: 'Sand', price: 28, unit: 'ton', minimum: 2 },
-    { id: 114, name: 'Slag', price: 32, unit: 'ton', minimum: 2 },
-];
-
-const DELIVERY_FEE = 75;
-
-// Convert to Set for O(1) lookup
-const servicedZipSet = new Set(SERVICED_ZIP_CODES);
-
-function checkServiceArea(zipCode: string): boolean {
-    return servicedZipSet.has(zipCode);
-}
+import { checkServiceArea } from '@/lib/check-service-area';
+import { getAllMaterials, getMaterialByProductId, DELIVERY_FEE } from '@/lib/materials';
 
 export async function POST(request: Request) {
     try {
@@ -98,23 +72,25 @@ function handleToolCall(name: string, args: any, callId?: string): any {
                 };
             }
 
+            const materials = getAllMaterials();
+
             return {
                 available: true,
-                materials: MATERIALS.map(m => ({
-                    id: m.id,
+                materials: materials.map(m => ({
+                    id: m.product_id, // Map internal ID to Product ID (101-114) for Voice Agent
                     name: m.name,
                     price: m.price,
                     unit: m.unit,
                     minimum: m.minimum
                 })),
                 delivery_fee: DELIVERY_FEE,
-                message: `We have ${MATERIALS.length} materials available for delivery to ${zipCode}. Delivery fee is $${DELIVERY_FEE}.`
+                message: `We have ${materials.length} materials available for delivery to ${zipCode}. Delivery fee is $${DELIVERY_FEE}.`
             };
         }
 
         case 'get_material_details': {
             const { material_id } = args;
-            const material = MATERIALS.find(m => m.id === Number(material_id));
+            const material = getMaterialByProductId(Number(material_id));
 
             if (!material) {
                 return {
@@ -125,7 +101,7 @@ function handleToolCall(name: string, args: any, callId?: string): any {
 
             return {
                 found: true,
-                id: material.id,
+                id: material.product_id, // Return product_id
                 name: material.name,
                 price: material.price,
                 unit: material.unit,
